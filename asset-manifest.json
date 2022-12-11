@@ -1,15 +1,15 @@
 {
   "files": {
     "main.css": "/mflix-ui-inspired-intellect/static/css/main.e6c13ad2.css",
-    "main.js": "/mflix-ui-inspired-intellect/static/js/main.225aef46.js",
-    "static/js/787.4626b496.chunk.js": "/mflix-ui-inspired-intellect/static/js/787.4626b496.chunk.js",
+    "main.js": "/mflix-ui-inspired-intellect/static/js/main.465c9f38.js",
+    "static/js/787.9827d9b9.chunk.js": "/mflix-ui-inspired-intellect/static/js/787.9827d9b9.chunk.js",
     "index.html": "/mflix-ui-inspired-intellect/index.html",
     "main.e6c13ad2.css.map": "/mflix-ui-inspired-intellect/static/css/main.e6c13ad2.css.map",
-    "main.225aef46.js.map": "/mflix-ui-inspired-intellect/static/js/main.225aef46.js.map",
-    "787.4626b496.chunk.js.map": "/mflix-ui-inspired-intellect/static/js/787.4626b496.chunk.js.map"
+    "main.465c9f38.js.map": "/mflix-ui-inspired-intellect/static/js/main.465c9f38.js.map",
+    "787.9827d9b9.chunk.js.map": "/mflix-ui-inspired-intellect/static/js/787.9827d9b9.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.e6c13ad2.css",
-    "static/js/main.225aef46.js"
+    "static/js/main.465c9f38.js"
   ]
 }
