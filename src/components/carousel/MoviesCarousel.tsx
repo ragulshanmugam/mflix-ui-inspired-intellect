@@ -1,39 +1,15 @@
 import * as React from "react";
-import {
-    Box,
-    Center,
-    Image,
-    Flex,
-    Badge,
-    Text,
-    SimpleGrid,
-    useDisclosure,
-    Button,
-    Divider,
-    Card,
-    CardBody
-} from "@chakra-ui/react";
+import {Box, Button, Flex, Image, SimpleGrid, Text, useDisclosure} from "@chakra-ui/react";
 import {MdStar} from "react-icons/md";
 import {movieMocks} from "../MovieMocks";
-import {
-    Modal,
-    ModalOverlay,
-    ModalContent,
-    ModalHeader,
-    ModalFooter,
-    ModalBody,
-    ModalCloseButton,
-} from "@chakra-ui/core";
+import {Modal, ModalBody, ModalCloseButton, ModalContent, ModalOverlay,} from "@chakra-ui/core";
 import {updateGenre} from "../store/GenericSlicer";
 import {useDispatch, useSelector} from "react-redux";
-import {Simulate} from "react-dom/test-utils";
-import error = Simulate.error;
 import {RootState} from "../store/Store";
 
 function MovieCarousel() {
     const {isOpen, onOpen, onClose} = useDisclosure()
     const uniqueGenres: string[] = [];
-    // const allGenres: string[] = [];
     const resultDiv: any = [];
     const filterResultDiv: any = [];
     const dispatch = useDispatch();
@@ -42,26 +18,26 @@ function MovieCarousel() {
     const [plot, setPlot] = React.useState("");
     const [imgSource, setImgSource] = React.useState("");
     const filterValues = useSelector((state: RootState) => state.filterValues.filterValues);
+    const filteredMoviesId: string | string[] = [];
 
+    // When the image fails to load we can use this function to set a default image
     // const imageOnErrorHandler = (
     //     event: React.SyntheticEvent<HTMLImageElement, Event>
     // ) => {
     //     event.currentTarget.onerror = null;
-    //     event.currentTarget.src = "https://www.kindacode.com/wp-content/uploads/2021/08/oops.png";
+    //     event.currentTarget.src = "Default Image";
     // };
 
     const viewDetails = (event: React.MouseEvent<HTMLButtonElement>) => {
         event.preventDefault();
         onOpen();
         const id = event.currentTarget.id;
-        console.log("button clicked with id...", id);
         movieMocks.forEach(movie => {
             if (movie._id === id) {
                 setTitle(movie.title);
-                if(movie.rated === undefined || null) {
+                if (movie.rated === undefined || null) {
                     setRating("N/A");
-                }
-                else {
+                } else {
                     setRating(movie.rated);
                 }
                 setPlot(movie.plot);
@@ -70,15 +46,12 @@ function MovieCarousel() {
         })
     }
 
-    console.log("filter values inside movies...", filterValues);
+    // Updating the result div list for the first time or based on the filter value
     function updateResult(movie: any, genresAdded: string, result: any) {
-        console.log("resultdiv in update result function is...", result);
         result.push(
-            // <Card maxW='sm'>
-            //     <CardBody>
             <Box p="5" maxW="300px" borderWidth="1px">
                 <Image borderRadius="md" alt={movie.title}
-                       src={movie.poster} />
+                       src={movie.poster}/>
                 {/*onError={imageOnErrorHandler} />*/}
                 <Flex align="baseline" mt={2} justifyContent='center'>
                 </Flex>
@@ -93,7 +66,7 @@ function MovieCarousel() {
                 >
                     {movie.languages}
                 </Text>
-                <Flex mt={2} >
+                <Flex mt={2}>
                     <Box as={MdStar} color="orange.400"/>
                     <Text ml={1} fontSize="sm">
                         <b>{movie.imdb.rating}/10</b>
@@ -103,44 +76,46 @@ function MovieCarousel() {
                     View Details
                 </Button>
             </Box>
-            // </CardBody><Divider /></Card>
         )
     }
 
+    // Updating the result div for the first time with all the
+    // movies that we got from the API
     movieMocks.forEach(movie => {
         let genresAdded: string = "";
         movie.genres.forEach(genre => {
             genresAdded += genre + " | ";
-            // allGenres.push(genre);
             if (!uniqueGenres.includes(genre)) {
                 uniqueGenres.push(genre);
             }
         })
         updateResult(movie, genresAdded, resultDiv);
     });
+
+    // Updating configure store with unique genres that will be used in filtering
+    // in the Sidebar in the other class
     dispatch(updateGenre(uniqueGenres));
 
+    // Updating the result div based on the filter from the user
     movieMocks.forEach(movie => {
         let genresAdded: string = "";
-        console.log("genre type...", filterValues +"...." + filterValues.length);
-        if(filterValues.length > 0) {
+        if (filterValues.length > 0) {
             filterValues.forEach(filter => {
-                let filterString: string = ""+filter;
-                if(Object.values(movie.genres).indexOf(filterString) > -1) {
-                    console.log("genre type... has...", filterString.toUpperCase());
-                    movie.genres.forEach(genre => {
-                        genresAdded += genre + " | ";
-                    })
-                    updateResult(movie, genresAdded, filterResultDiv);
+                let filterString: string = "" + filter;
+                if (Object.values(movie.genres).indexOf(filterString) > -1) {
+                    if (filteredMoviesId.includes(movie._id)) {
+                        console.log("Filtered movie already in the list.");
+                    } else {
+                        movie.genres.forEach(genre => {
+                            genresAdded += genre + " | ";
+                        })
+                        filteredMoviesId.push(movie._id);
+                        updateResult(movie, genresAdded, filterResultDiv);
+                    }
                 }
             })
         }
-        console.log("filterResultDiv....is....", filterResultDiv);
-        console.log("filterResultDi length is....", filterResultDiv.length);
     });
-
-    console.log("resultDiv length is....", resultDiv.length);
-    console.log("filterResultDiv length is....", filterResultDiv.length);
 
     return (
         <>
@@ -148,9 +123,9 @@ function MovieCarousel() {
                 {(() => {
                     if (filterValues.length > 0) {
                         return (
-                        <SimpleGrid spacing={4} templateColumns='repeat(auto-fill, minmax(200px, 1fr))'>
-                            {filterResultDiv}
-                        </SimpleGrid>
+                            <SimpleGrid spacing={4} templateColumns='repeat(auto-fill, minmax(200px, 1fr))'>
+                                {filterResultDiv}
+                            </SimpleGrid>
 
                         )
                     } else {
@@ -170,8 +145,8 @@ function MovieCarousel() {
                         <ModalBody>
                             <Box p="9" borderWidth="1px" bg="whiteAlpha.900">
                                 <Flex mt={2} align="center" justifyContent='center'>
-                                    <Image borderRadius="md" height='300px' width='200px' src={imgSource} alt={title} />
-                                            {/*onError={imageOnErrorHandler} />*/}
+                                    <Image borderRadius="md" height='300px' width='200px' src={imgSource} alt={title}/>
+                                    {/*onError={imageOnErrorHandler} />*/}
                                 </Flex>
                                 <Flex align="center" mt={2} justifyContent='center'>
                                     <Text mt={2} fontSize="l" color='black' fontWeight="bold" lineHeight="short">

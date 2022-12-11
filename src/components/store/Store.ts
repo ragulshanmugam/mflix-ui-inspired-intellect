@@ -1,12 +1,10 @@
-import { configureStore } from '@reduxjs/toolkit'
+import {configureStore} from '@reduxjs/toolkit'
 import genreSlicer from "./GenericSlicer";
-import spinnerSlicer from "./GenericSlicer";
 import filterSlicer from "./GenericSlicer";
 
 export const store = configureStore({
     reducer: {
         genre: genreSlicer,
-        spinner: spinnerSlicer,
         filterValues: filterSlicer,
     },
 })

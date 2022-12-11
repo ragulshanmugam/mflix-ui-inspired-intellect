@@ -1,14 +1,12 @@
-import { createSlice } from '@reduxjs/toolkit'
-import type { PayloadAction } from '@reduxjs/toolkit'
+import type {PayloadAction} from '@reduxjs/toolkit'
+import {createSlice} from '@reduxjs/toolkit'
 
 export interface GenreState {
-    // genre: string
     genres: any[]
     filterValues: (string | number)[]
 }
 
 const initialState: GenreState = {
-    // genre: "",
     genres: [],
     filterValues: []
 }
@@ -27,6 +25,6 @@ export const genreSlice = createSlice({
 })
 
 // Action creators are generated for each case reducer function
-export const { updateGenre, updateFilterValues } = genreSlice.actions
+export const {updateGenre, updateFilterValues} = genreSlice.actions
 
 export default genreSlice.reducer
